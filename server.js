@@ -5,6 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 const PORT = 5000;
+const BASE_URL = "https://my-fb-server-1.onrender.com";
 
 app.use(cors());
 app.use(express.json());
@@ -27,7 +28,7 @@ let stories = [];
 // Upload API
 app.post('/upload', upload.single('file'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-  const url = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+  const url = `${BASE_URL}/uploads/${req.file.filename}`;
   const story = {
     url,
     time: Date.now(),
