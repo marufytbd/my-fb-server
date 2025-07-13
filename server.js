@@ -53,4 +53,33 @@ app.delete('/stories', (req, res) => {
   res.json({ success: true, message: 'All stories deleted.' });
 });
 
+// In-memory post list (for demo; use DB in production)
+let posts = [];
+
+// Post Upload API
+app.post('/post', upload.single('file'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const url = `${BASE_URL}/uploads/${req.file.filename}`;
+  const post = {
+    url,
+    time: Date.now(),
+    user: req.body.user || 'Anonymous',
+    caption: req.body.caption || '',
+    type: req.file.mimetype
+  };
+  posts.push(post);
+  res.json(post);
+});
+
+// Posts list API
+app.get('/posts', (req, res) => {
+  res.json(posts);
+});
+
+// Delete all posts
+app.delete('/posts', (req, res) => {
+  posts = [];
+  res.json({ success: true, message: 'All posts deleted.' });
+});
+
 app.listen(PORT, () => console.log('Server running on port', PORT)); 
