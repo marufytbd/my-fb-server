@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 const PORT = 5000;
-const BASE_URL = "https://my-fb-server-1.onrender.com";
+const BASE_URL = "https://my-fb-server-2.onrender.com";
 
 app.use(cors());
 app.use(express.json());
@@ -18,22 +18,39 @@ if (!fs.existsSync('uploads')) {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
-  filename: (req, file, cb) => cb(null, Date.now() + '-' + file.originalname)
+  filename: (req, file, cb) => {
+    // Always preserve original extension
+    const ext = path.extname(file.originalname);
+    const base = path.basename(file.originalname, ext);
+    cb(null, Date.now() + '-' + base.replace(/[^a-zA-Z0-9_-]/g, '') + ext);
+  }
 });
-const upload = multer({ storage });
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    // Only allow image and video
+    if (file.mimetype.startsWith('image/') || file.mimetype.startsWith('video/')) {
+      cb(null, true);
+    } else {
+      cb(new Error('Only image and video files are allowed!'));
+    }
+  }
+});
 
 // In-memory story list (for demo; use DB in production)
 let stories = [];
 
 // Upload API
 app.post('/upload', upload.single('file'), (req, res) => {
+  console.log('Story upload body:', req.body);
   if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
   const url = `${BASE_URL}/uploads/${req.file.filename}`;
   const story = {
     url,
     time: Date.now(),
-    user: req.body.user || 'Anonymous',
-    type: req.file.mimetype // <-- send the real MIME type
+    userName: req.body.userName || 'Anonymous',
+    profileImage: req.body.profileImage || 'default-profile.png',
+    type: req.file.mimetype
   };
   stories.push(story);
   res.json(story);
@@ -58,12 +75,24 @@ let posts = [];
 
 // Post Upload API
 app.post('/post', upload.single('file'), (req, res) => {
-  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  console.log('POST /post called');
+  console.log('req.file:', req.file);
+  console.log('req.body:', req.body);
+  if (!req.file) {
+    console.error('No file uploaded!');
+    return res.status(400).json({ error: 'No file uploaded (debug: req.file is undefined)' });
+  }
+  // Extra: check mimetype again
+  if (!(req.file.mimetype.startsWith('image/') || req.file.mimetype.startsWith('video/'))) {
+    return res.status(400).json({ error: 'Only image and video files are allowed!' });
+  }
   const url = `${BASE_URL}/uploads/${req.file.filename}`;
   const post = {
     url,
     time: Date.now(),
     user: req.body.user || 'Anonymous',
+    name: req.body.user || 'Anonymous',
+    profileImage: req.body.profileImage || 'default-profile.png',
     caption: req.body.caption || '',
     type: req.file.mimetype
   };
@@ -82,4 +111,69 @@ app.delete('/posts', (req, res) => {
   res.json({ success: true, message: 'All posts deleted.' });
 });
 
-app.listen(PORT, () => console.log('Server running on port', PORT)); 
+// --- Profile Upload & Fetch APIs ---
+const PROFILES_FILE = 'profiles.json';
+
+// Helper: Load profiles from file
+function loadProfiles() {
+  try {
+    if (!fs.existsSync(PROFILES_FILE)) return [];
+    const data = fs.readFileSync(PROFILES_FILE, 'utf-8');
+    return JSON.parse(data);
+  } catch (e) {
+    return [];
+  }
+}
+// Helper: Save profiles to file
+function saveProfiles(profiles) {
+  fs.writeFileSync(PROFILES_FILE, JSON.stringify(profiles, null, 2));
+}
+
+// Profile image upload API
+app.post('/upload-profile', upload.single('file'), (req, res) => {
+  if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+  const url = `${BASE_URL}/uploads/${req.file.filename}`;
+  const { name, background } = req.body;
+  let profiles = loadProfiles();
+  let idx = profiles.findIndex(p => p.name === name);
+  let profile;
+  if (background === '1') {
+    // Cover photo upload
+    profile = {
+      ...(profiles[idx] || {}),
+      name: name || 'Anonymous',
+      background: url,
+      updated: Date.now()
+    };
+    if (idx >= 0) {
+      profiles[idx] = { ...profiles[idx], ...profile };
+    } else {
+      profiles.push(profile);
+    }
+    saveProfiles(profiles);
+    return res.json({ background: url });
+  } else {
+    // Profile image upload
+    profile = {
+      name: name || 'Anonymous',
+      profileImage: url,
+      background: (profiles[idx] && profiles[idx].background) || '',
+      updated: Date.now()
+    };
+    if (idx >= 0) {
+      profiles[idx] = { ...profiles[idx], ...profile };
+    } else {
+      profiles.push(profile);
+    }
+    saveProfiles(profiles);
+    return res.json(profile);
+  }
+});
+
+// Get all profiles
+app.get('/profiles', (req, res) => {
+  const profiles = loadProfiles();
+  res.json(profiles);
+});
+
+app.listen(PORT, () => console.log('Server running on port', PORT));
