@@ -5,7 +5,7 @@ const fs = require('fs');
 const path = require('path');
 const app = express();
 const PORT = 5000;
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = "https://my-fb-server-2.onrender.com";
 
 app.use(cors());
 app.use(express.json({ limit: '50mb' }));
