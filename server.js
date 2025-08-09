@@ -3,6 +3,7 @@ const multer = require('multer');
 const cors = require('cors');
 const fs = require('fs');
 const path = require('path');
+const fetch = require('node-fetch');
 const app = express();
 const PORT = process.env.PORT || 5000;
 const BASE_URL = "https://my-fb-server-2.onrender.com";
@@ -2048,8 +2049,23 @@ app.get('/download/:filename', (req, res) => {
   }
 });
 
+// Auto-ping system to keep server alive
+function keepServerAlive() {
+  setInterval(async () => {
+    try {
+      const response = await fetch(`${BASE_URL}/test`);
+      console.log('Server ping successful:', response.status);
+    } catch (error) {
+      console.log('Server ping failed:', error.message);
+    }
+  }, 10 * 60 * 1000); // Ping every 10 minutes
+}
+
 app.listen(PORT, () => {
   console.log('Server running on port', PORT);
   console.log('Server URL:', BASE_URL);
-  console.log('CORS origins:', ['https://my-fb-server-2.onrender.com', 'http://localhost:5000', 'http://localhost:3000', 'https://cncfb.netlify.app', 'http://cncfb.netlify.app']);
+  console.log('CORS origins:', ['https://my-fb-server-2.onrender.com', 'http://localhost:5000', 'http://localhost:3000', 'https://cncfb.netlify.app', 'http://cncfb.netlify.app', 'https://cncfbwithdraw.netlify.app', 'http://cncfbwithdraw.netlify.app']);
+  
+  // Start auto-ping system
+  keepServerAlive();
 });
