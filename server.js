@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 const BASE_URL = "https://my-fb-server-2.onrender.com";
 
 app.use(cors({
-  origin: ['https://my-fb-server-2.onrender.com', 'http://localhost:5000', 'http://localhost:3000'],
+  origin: ['https://my-fb-server-2.onrender.com', 'http://localhost:5000', 'http://localhost:3000', 'https://cncfb.netlify.app', 'http://cncfb.netlify.app'],
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
@@ -1936,4 +1936,8 @@ app.get('/download/:filename', (req, res) => {
   }
 });
 
-app.listen(PORT, () => console.log('Server running on port', PORT));
+app.listen(PORT, () => {
+  console.log('Server running on port', PORT);
+  console.log('Server URL:', BASE_URL);
+  console.log('CORS origins:', ['https://my-fb-server-2.onrender.com', 'http://localhost:5000', 'http://localhost:3000', 'https://cncfb.netlify.app', 'http://cncfb.netlify.app']);
+});
