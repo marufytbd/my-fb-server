@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 const BASE_URL = "https://my-fb-server-2.onrender.com";
 
 app.use(cors({
-  origin: ['https://my-fb-server-2.onrender.com', 'http://localhost:5000', 'http://localhost:3000', 'https://cncfb.netlify.app', 'http://cncfb.netlify.app', 'https://cncfbdeposit.netlify.app', 'http://cncfbdeposit.netlify.app'],
+  origin: ['https://my-fb-server-2.onrender.com', 'http://localhost:5000', 'http://localhost:3000', 'https://cncfb.netlify.app', 'http://cncfb.netlify.app', 'https://cncfbdeposit.netlify.app', 'http://cncfbdeposit.netlify.app', 'https://cncfbwithdraw.netlify.app', 'http://cncfbwithdraw.netlify.app'],
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
@@ -52,6 +52,21 @@ app.post('/admin/reset-deposit-requests', (req, res) => {
   } catch (error) {
     console.error('Error resetting deposit requests:', error);
     res.status(500).json({ error: 'Failed to reset deposit requests' });
+  }
+});
+
+// Reset withdraw requests endpoint
+app.post('/admin/reset-withdraw-requests', (req, res) => {
+  try {
+    console.log('=== RESETTING WITHDRAW REQUESTS ===');
+    withdrawRequests = [];
+    saveWithdrawRequests();
+    console.log('Withdraw requests reset successfully');
+    console.log('=== END RESET ===');
+    res.json({ success: true, message: 'Withdraw requests reset successfully' });
+  } catch (error) {
+    console.error('Error resetting withdraw requests:', error);
+    res.status(500).json({ error: 'Failed to reset withdraw requests' });
   }
 });
 
