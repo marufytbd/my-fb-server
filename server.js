@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 const BASE_URL = "https://my-fb-server-2.onrender.com";
 
 app.use(cors({
-  origin: ['https://my-fb-server-2.onrender.com', 'http://localhost:5000', 'http://localhost:3000', 'https://cncfb.netlify.app', 'http://cncfb.netlify.app'],
+  origin: ['https://my-fb-server-2.onrender.com', 'http://localhost:5000', 'http://localhost:3000', 'https://cncfb.netlify.app', 'http://cncfb.netlify.app', 'https://cncfbdeposit.netlify.app', 'http://cncfbdeposit.netlify.app'],
   credentials: true
 }));
 app.use(express.json({ limit: '50mb' }));
@@ -22,6 +22,37 @@ app.get('/test', (req, res) => {
     timestamp: new Date().toISOString(),
     baseUrl: BASE_URL 
   });
+});
+
+// Server status endpoint
+app.get('/server-status', (req, res) => {
+  res.json({
+    status: 'running',
+    timestamp: new Date().toISOString(),
+    depositRequests: {
+      count: Array.isArray(depositRequests) ? depositRequests.length : 0,
+      isArray: Array.isArray(depositRequests)
+    },
+    withdrawRequests: {
+      count: Array.isArray(withdrawRequests) ? withdrawRequests.length : 0,
+      isArray: Array.isArray(withdrawRequests)
+    }
+  });
+});
+
+// Reset deposit requests endpoint
+app.post('/admin/reset-deposit-requests', (req, res) => {
+  try {
+    console.log('=== RESETTING DEPOSIT REQUESTS ===');
+    depositRequests = [];
+    saveDepositRequests();
+    console.log('Deposit requests reset successfully');
+    console.log('=== END RESET ===');
+    res.json({ success: true, message: 'Deposit requests reset successfully' });
+  } catch (error) {
+    console.error('Error resetting deposit requests:', error);
+    res.status(500).json({ error: 'Failed to reset deposit requests' });
+  }
 });
 
 // Serve static HTML files
@@ -652,8 +683,17 @@ function loadDepositRequests() {
   try {
     if (fs.existsSync('depositRequests.json')) {
       const data = fs.readFileSync('depositRequests.json', 'utf8');
-      depositRequests = JSON.parse(data);
-      console.log('Loaded deposit requests from file:', depositRequests.length);
+      const parsedData = JSON.parse(data);
+      if (Array.isArray(parsedData)) {
+        depositRequests = parsedData;
+        console.log('Loaded deposit requests from file:', depositRequests.length);
+      } else {
+        console.log('Invalid deposit requests data format, initializing empty array');
+        depositRequests = [];
+      }
+    } else {
+      console.log('depositRequests.json not found, initializing empty array');
+      depositRequests = [];
     }
   } catch (error) {
     console.error('Error loading deposit requests:', error);
@@ -664,6 +704,12 @@ function loadDepositRequests() {
 // Save deposit requests to file
 function saveDepositRequests() {
   try {
+    // Ensure depositRequests is an array before saving
+    if (!Array.isArray(depositRequests)) {
+      console.log('depositRequests is not an array, initializing before saving');
+      depositRequests = [];
+    }
+    
     fs.writeFileSync('depositRequests.json', JSON.stringify(depositRequests, null, 2));
     console.log('Saved deposit requests to file:', depositRequests.length);
   } catch (error) {
@@ -676,8 +722,17 @@ function loadWithdrawRequests() {
   try {
     if (fs.existsSync('withdrawRequests.json')) {
       const data = fs.readFileSync('withdrawRequests.json', 'utf8');
-      withdrawRequests = JSON.parse(data);
-      console.log('Loaded withdraw requests from file:', withdrawRequests.length);
+      const parsedData = JSON.parse(data);
+      if (Array.isArray(parsedData)) {
+        withdrawRequests = parsedData;
+        console.log('Loaded withdraw requests from file:', withdrawRequests.length);
+      } else {
+        console.log('Invalid withdraw requests data format, initializing empty array');
+        withdrawRequests = [];
+      }
+    } else {
+      console.log('withdrawRequests.json not found, initializing empty array');
+      withdrawRequests = [];
     }
   } catch (error) {
     console.error('Error loading withdraw requests:', error);
@@ -688,6 +743,12 @@ function loadWithdrawRequests() {
 // Save withdraw requests to file
 function saveWithdrawRequests() {
   try {
+    // Ensure withdrawRequests is an array before saving
+    if (!Array.isArray(withdrawRequests)) {
+      console.log('withdrawRequests is not an array, initializing before saving');
+      withdrawRequests = [];
+    }
+    
     fs.writeFileSync('withdrawRequests.json', JSON.stringify(withdrawRequests, null, 2));
     console.log('Saved withdraw requests to file:', withdrawRequests.length);
   } catch (error) {
@@ -698,6 +759,14 @@ function saveWithdrawRequests() {
 // Load requests on startup
 loadDepositRequests();
 loadWithdrawRequests();
+
+// Ensure depositRequests is properly initialized
+if (!Array.isArray(depositRequests)) {
+  depositRequests = [];
+}
+if (!Array.isArray(withdrawRequests)) {
+  withdrawRequests = [];
+}
 
 // Upload API
 app.post('/upload', upload.single('file'), (req, res) => {
@@ -1482,6 +1551,12 @@ app.post('/submit-deposit', (req, res) => {
     console.log('Request body:', depositRequest);
     console.log('Current depositRequests array length:', depositRequests.length);
     
+    // Ensure depositRequests is an array
+    if (!Array.isArray(depositRequests)) {
+      console.log('depositRequests is not an array, initializing');
+      depositRequests = [];
+    }
+    
     depositRequests.push(depositRequest);
     console.log('Deposit request added. New array length:', depositRequests.length);
     console.log('All deposit requests:', depositRequests);
@@ -1505,6 +1580,12 @@ app.post('/submit-withdraw', (req, res) => {
     console.log('Request body:', withdrawRequest);
     console.log('Current withdrawRequests array length:', withdrawRequests.length);
     
+    // Ensure withdrawRequests is an array
+    if (!Array.isArray(withdrawRequests)) {
+      console.log('withdrawRequests is not an array, initializing');
+      withdrawRequests = [];
+    }
+    
     withdrawRequests.push(withdrawRequest);
     console.log('Withdraw request added. New array length:', withdrawRequests.length);
     console.log('All withdraw requests:', withdrawRequests);
@@ -1526,7 +1607,15 @@ app.get('/admin/requests', (req, res) => {
     console.log('=== ADMIN REQUESTS ENDPOINT CALLED ===');
     console.log('Current depositRequests array:', depositRequests);
     console.log('Array length:', depositRequests.length);
+    console.log('Is Array:', Array.isArray(depositRequests));
     console.log('=== END ADMIN REQUESTS ===');
+    
+    // Ensure we're returning an array
+    if (!Array.isArray(depositRequests)) {
+      console.log('depositRequests is not an array, initializing empty array');
+      depositRequests = [];
+    }
+    
     res.json(depositRequests);
   } catch (error) {
     console.error('Error getting deposit requests:', error);
@@ -1540,7 +1629,15 @@ app.get('/admin/withdraw-requests', (req, res) => {
     console.log('=== ADMIN WITHDRAW REQUESTS ENDPOINT CALLED ===');
     console.log('Current withdrawRequests array:', withdrawRequests);
     console.log('Array length:', withdrawRequests.length);
+    console.log('Is Array:', Array.isArray(withdrawRequests));
     console.log('=== END ADMIN WITHDRAW REQUESTS ===');
+    
+    // Ensure we're returning an array
+    if (!Array.isArray(withdrawRequests)) {
+      console.log('withdrawRequests is not an array, initializing empty array');
+      withdrawRequests = [];
+    }
+    
     res.json(withdrawRequests);
   } catch (error) {
     console.error('Error getting withdraw requests:', error);
