@@ -1,0 +1,2447 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Withdraw Admin Panel - CNC FB</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .admin-container {
+            width: 100vw;
+            height: 100vh;
+            margin: 0;
+            background: white;
+            border-radius: 0;
+            box-shadow: none;
+            overflow: hidden;
+        }
+        
+                 .software-header {
+             background: linear-gradient(135deg, #1a237e 0%, #3949ab 100%);
+             color: white;
+             padding: 20px 30px;
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             position: relative;
+         }
+         
+         .software-info {
+             display: flex;
+             align-items: center;
+             gap: 15px;
+             flex: 1;
+         }
+         
+         .admin-panel-info {
+             text-align: center;
+             flex: 1;
+         }
+         
+         .admin-panel-info h1 {
+             font-size: 24px;
+             font-weight: 700;
+             margin-bottom: 5px;
+             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+         }
+         
+         .admin-panel-info p {
+             font-size: 14px;
+             opacity: 0.9;
+             margin: 0;
+         }
+         
+         .software-logo {
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             width: 60px;
+             height: 60px;
+             background: rgba(255,255,255,0.2);
+             border-radius: 50%;
+             backdrop-filter: blur(10px);
+         }
+         
+         .software-details {
+             text-align: left;
+         }
+         
+         .software-name {
+             font-size: 28px;
+             font-weight: 700;
+             margin: 0;
+             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+         }
+         
+         
+         
+                                   .admin-header {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            padding: 20px 30px;
+            text-align: center;
+        }
+        
+        .admin-header h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .admin-header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+                 .stat-card {
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+             padding: 25px;
+             border-radius: 16px;
+             box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+             text-align: center;
+             border: 2px solid rgba(255,255,255,0.2);
+             backdrop-filter: blur(10px);
+             transition: all 0.3s ease;
+             position: relative;
+             overflow: hidden;
+         }
+         
+         .stat-card::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: 0;
+             right: 0;
+             bottom: 0;
+             background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%);
+             transform: translateX(-100%);
+             transition: transform 0.6s ease;
+         }
+         
+         .stat-card:hover::before {
+             transform: translateX(100%);
+         }
+         
+         .stat-card:hover {
+             transform: translateY(-5px);
+             box-shadow: 0 12px 40px rgba(102, 126, 234, 0.4);
+         }
+         
+         .stat-card:nth-child(1) {
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+         }
+         
+         .stat-card:nth-child(2) {
+             background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+         }
+         
+         .stat-card:nth-child(3) {
+             background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+         }
+         
+         .stat-card:nth-child(4) {
+             background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+         }
+         
+         .stat-number {
+             font-size: 42px;
+             font-weight: 800;
+             color: white;
+             margin-bottom: 10px;
+             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+         }
+         
+         .stat-label {
+             font-size: 16px;
+             color: rgba(255,255,255,0.9);
+             font-weight: 600;
+             text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+         }
+        
+                 .admin-content {
+             padding: 30px;
+             display: flex;
+             gap: 30px;
+             align-items: flex-start;
+         }
+        
+                         .section-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #e74c3c;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 6px;
+            border-left: 3px solid #e74c3c;
+            text-align: center;
+            justify-content: center;
+        }
+        
+                 .request-filters {
+             display: flex;
+             flex-direction: column;
+             gap: 12px;
+             margin-bottom: 30px;
+             width: 200px;
+             margin-left: -40px;
+         }
+        
+                 .filter-btn {
+             padding: 10px 20px;
+             border: 2px solid transparent;
+             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #c2e9fb 100%);
+             border-radius: 8px 0 0 8px;
+             cursor: pointer;
+             font-weight: 600;
+             transition: all 0.3s ease;
+             box-shadow: 0 4px 12px rgba(168, 237, 234, 0.3);
+             position: relative;
+             overflow: hidden;
+             text-align: center;
+             font-size: 14px;
+             color: #2c3e50;
+         }
+         
+         .filter-btn::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: 0;
+             right: 0;
+             bottom: 0;
+             background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.3) 50%, transparent 70%);
+             transform: translateX(-100%);
+             transition: transform 0.4s ease;
+         }
+         
+         .filter-btn:hover::before {
+             transform: translateX(100%);
+         }
+         
+         .filter-btn:hover {
+             transform: translateY(-2px);
+             box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+         }
+         
+                 .filter-btn.active {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 4px 16px rgba(231, 76, 60, 0.3);
+            border-radius: 8px 0 0 8px;
+        }
+        
+                 .requests-grid {
+             display: grid;
+             gap: 20px;
+             flex: 1;
+         }
+        
+                 .request-card {
+             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+             border: 2px solid transparent;
+             border-radius: 16px;
+             padding: 25px;
+             transition: all 0.3s ease;
+             box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+             position: relative;
+             overflow: hidden;
+         }
+         
+         .request-card::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: 0;
+             right: 0;
+             height: 4px;
+             background: linear-gradient(90deg, #e74c3c 0%, #c0392b 100%);
+         }
+         
+         .request-card:hover {
+             transform: translateY(-3px);
+             box-shadow: 0 12px 30px rgba(231, 76, 60, 0.2);
+             border-color: rgba(231, 76, 60, 0.3);
+         }
+        
+        .request-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e4e6ea;
+        }
+        
+        .request-id {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1877f2;
+        }
+        
+        .request-status {
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+                 .status-pending {
+             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+             color: #8b4513;
+             box-shadow: 0 2px 8px rgba(252, 182, 159, 0.3);
+         }
+         
+         .status-approved {
+             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+             color: #155724;
+             box-shadow: 0 2px 8px rgba(168, 237, 234, 0.3);
+         }
+         
+         .status-rejected {
+             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%);
+             color: #721c24;
+             box-shadow: 0 2px 8px rgba(255, 154, 158, 0.3);
+         }
+        
+        .request-details {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        
+        .detail-label {
+            font-size: 12px;
+            color: #65676b;
+            font-weight: 600;
+        }
+        
+        .detail-value {
+            font-size: 14px;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+        
+        .request-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+                 .action-btn {
+             padding: 12px 24px;
+             border: none;
+             border-radius: 12px;
+             font-weight: 600;
+             cursor: pointer;
+             transition: all 0.3s ease;
+             position: relative;
+             overflow: hidden;
+             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+         }
+         
+         .action-btn::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: 0;
+             right: 0;
+             bottom: 0;
+             background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+             transform: translateX(-100%);
+             transition: transform 0.4s ease;
+         }
+         
+         .action-btn:hover::before {
+             transform: translateX(100%);
+         }
+         
+         .btn-approve {
+             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 50%, #c2e9fb 100%);
+             color: #2c3e50;
+         }
+         
+         .btn-reject {
+             background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fad0c4 100%);
+             color: #721c24;
+         }
+         
+         .btn-view {
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+             color: white;
+         }
+         
+         .action-btn:hover {
+             transform: translateY(-3px);
+             box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+         }
+        
+        .no-requests {
+            text-align: center;
+            padding: 60px 20px;
+            color: #65676b;
+        }
+        
+                 .no-requests-icon {
+             font-size: 48px;
+             margin-bottom: 20px;
+         }
+         
+         .content-area {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+             gap: 20px;
+             margin-top: 30px;
+             padding: 20px;
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+             border-radius: 16px;
+             border: 2px solid rgba(255, 255, 255, 0.2);
+             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+         }
+         
+         .content-box {
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+             padding: 25px;
+             border-radius: 12px;
+             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.3);
+             border: 1px solid rgba(255, 255, 255, 0.2);
+             transition: all 0.3s ease;
+             position: relative;
+             overflow: hidden;
+             color: white;
+         }
+         
+         .content-box::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: 0;
+             right: 0;
+             height: 3px;
+             background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+         }
+         
+         .content-box:hover {
+             transform: translateY(-3px);
+             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+         }
+         
+         .content-box h4 {
+             font-size: 18px;
+             font-weight: 700;
+             color: white;
+             margin-bottom: 12px;
+             display: flex;
+             align-items: center;
+             gap: 8px;
+             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+         }
+         
+         .content-box p {
+             font-size: 14px;
+             color: rgba(255, 255, 255, 0.9);
+             line-height: 1.5;
+             margin: 0;
+         }
+         
+                             /* User Management System Styles */
+                 .user-management-system {
+             margin-top: 0px;
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+             border-radius: 16px;
+             border: 2px solid rgba(255, 255, 255, 0.2);
+             max-height: 70vh;
+             overflow-y: scroll;
+             box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+         }
+         
+         .system-header {
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+             color: white;
+             padding: 20px 30px;
+             text-align: center;
+         }
+         
+         .system-header h3 {
+             font-size: 24px;
+             font-weight: 700;
+             margin-bottom: 8px;
+             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+         }
+         
+         .system-header p {
+             font-size: 16px;
+             opacity: 0.9;
+             margin: 0;
+         }
+         
+         .system-subtitle {
+             font-size: 12px !important;
+             opacity: 0.8 !important;
+             margin-top: 5px !important;
+         }
+         
+         /* Search Container Styles */
+         .search-container {
+             padding: 20px 30px 15px 30px;
+             background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.85) 100%);
+             border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+             backdrop-filter: blur(10px);
+         }
+         
+         .search-box {
+             position: relative;
+             display: flex;
+             align-items: center;
+             max-width: 600px;
+             margin: 0 auto;
+         }
+         
+         .search-box input {
+             width: 100%;
+             padding: 12px 45px 12px 20px;
+             border: 2px solid rgba(102, 126, 234, 0.3);
+             border-radius: 25px;
+             font-size: 14px;
+             background: rgba(255, 255, 255, 0.9);
+             color: #2c3e50;
+             font-weight: 500;
+             transition: all 0.3s ease;
+             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+         }
+         
+         .search-box input:focus {
+             outline: none;
+             border-color: #667eea;
+             box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+             background: rgba(255, 255, 255, 1);
+         }
+         
+         .search-box input::placeholder {
+             color: #7f8c8d;
+             font-style: italic;
+         }
+         
+         .clear-search-btn {
+             position: absolute;
+             right: 8px;
+             top: 50%;
+             transform: translateY(-50%);
+             background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+             border: none;
+             border-radius: 50%;
+             width: 30px;
+             height: 30px;
+             color: white;
+             font-size: 12px;
+             cursor: pointer;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             transition: all 0.3s ease;
+             box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+         }
+         
+         .clear-search-btn:hover {
+             transform: translateY(-50%) scale(1.1);
+             box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+         }
+         
+         /* Column Headers */
+         .column-headers {
+             display: flex;
+             align-items: center;
+             gap: 20px;
+             padding: 15px 30px 10px 30px;
+             background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.7) 100%);
+             border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+             font-weight: 600;
+             font-size: 14px;
+             color: #2c3e50;
+             backdrop-filter: blur(10px);
+         }
+         
+         .header-profile {
+             min-width: 180px;
+             text-align: left;
+         }
+         
+         .header-number {
+             min-width: 120px;
+             text-align: center;
+         }
+         
+         .header-amount {
+             min-width: 100px;
+             text-align: center;
+         }
+         
+         .header-transaction {
+             flex: 1;
+             min-width: 120px;
+             text-align: center;
+         }
+         
+         .header-screenshot {
+             min-width: 80px;
+             text-align: center;
+         }
+         
+         .header-date {
+             min-width: 100px;
+             text-align: center;
+         }
+         
+         .header-action {
+             min-width: 100px;
+             text-align: center;
+         }
+         
+                 .user-list {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+         
+         .user-card {
+             background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 50%, #ff9a9e 100%);
+             border-radius: 12px;
+             padding: 15px 20px;
+             box-shadow: 0 6px 20px rgba(252, 182, 159, 0.4);
+             border: 2px solid rgba(255, 255, 255, 0.3);
+             transition: all 0.3s ease;
+             position: relative;
+             overflow: hidden;
+             display: flex;
+             gap: 20px;
+             align-items: center;
+             cursor: pointer;
+         }
+         
+         .user-card::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: 0;
+             right: 0;
+             height: 4px;
+             background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+         }
+         
+         .user-card:hover {
+             transform: translateY(-2px);
+             box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+             border-color: rgba(102, 126, 234, 0.3);
+         }
+         
+         .user-card.expanded {
+             flex-direction: column;
+             align-items: stretch;
+             padding: 20px;
+         }
+         
+         .user-profile {
+             display: flex;
+             align-items: center;
+             gap: 12px;
+             min-width: 180px;
+         }
+         
+         .profile-image {
+             width: 40px;
+             height: 40px;
+             border-radius: 50%;
+             overflow: hidden;
+             border: 2px solid rgba(102, 126, 234, 0.2);
+             box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+         }
+         
+         .profile-image img {
+             width: 100%;
+             height: 100%;
+             object-fit: cover;
+         }
+         
+         .profile-info h4 {
+             font-size: 16px;
+             font-weight: 700;
+             color: #2c3e50;
+             margin-bottom: 3px;
+         }
+         
+         .profile-info p {
+             font-size: 13px;
+             color: #65676b;
+             margin-bottom: 0;
+         }
+         
+         .phone-info {
+             min-width: 120px;
+             text-align: center;
+         }
+         
+         .amount-info {
+             min-width: 100px;
+             text-align: center;
+         }
+         
+                     .amount-info .amount-display {
+                font-size: 14px;
+                font-weight: 700;
+                color: #000;
+                font-family: 'Courier New', monospace;
+            }
+         
+         .phone-number {
+             font-size: 14px;
+             font-weight: 600;
+             color: #2c3e50;
+             font-family: 'Courier New', monospace;
+             background: rgba(102, 126, 234, 0.1);
+             padding: 6px 10px;
+             border-radius: 6px;
+             border: 1px solid rgba(102, 126, 234, 0.2);
+             display: flex;
+             align-items: center;
+             gap: 8px;
+         }
+         
+         .copy-phone-btn {
+             background: none;
+             border: none;
+             font-size: 12px;
+             cursor: pointer;
+             padding: 2px;
+             border-radius: 4px;
+             transition: all 0.3s ease;
+             color: #1877f2;
+             margin-left: auto;
+         }
+         
+         .copy-phone-btn:hover {
+             background: rgba(24, 119, 242, 0.1);
+             transform: scale(1.1);
+         }
+         
+         .copy-phone-btn:active {
+             transform: scale(0.95);
+         }
+         
+         .withdraw-id-section {
+             display: flex;
+             align-items: center;
+             gap: 8px;
+             margin-top: 5px;
+         }
+         
+         .withdraw-id-label {
+             font-size: 12px;
+             color: #1877f2;
+             font-weight: 600;
+             background: rgba(24, 119, 242, 0.1);
+             padding: 2px 6px;
+             border-radius: 4px;
+         }
+         
+         .copy-btn {
+             background: none;
+             border: none;
+             font-size: 14px;
+             cursor: pointer;
+             padding: 2px;
+             border-radius: 4px;
+             transition: all 0.3s ease;
+             color: #1877f2;
+         }
+         
+         .copy-btn:hover {
+             background: rgba(24, 119, 242, 0.1);
+             transform: scale(1.1);
+         }
+         
+         .copy-btn:active {
+             transform: scale(0.95);
+         }
+         
+         /* Toast Notification Styles */
+         .toast-notification {
+             position: fixed;
+             top: 20px;
+             right: 20px;
+             z-index: 10000;
+             background: white;
+             border-radius: 8px;
+             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+             border-left: 4px solid #1877f2;
+             animation: slideInRight 0.3s ease;
+             max-width: 300px;
+         }
+         
+         .toast-success {
+             border-left-color: #27ae60;
+         }
+         
+         .toast-error {
+             border-left-color: #e74c3c;
+         }
+         
+         .toast-content {
+             display: flex;
+             align-items: center;
+             justify-content: space-between;
+             padding: 12px 16px;
+         }
+         
+         .toast-message {
+             font-size: 14px;
+             color: #2c3e50;
+             font-weight: 500;
+         }
+         
+         .toast-close {
+             background: none;
+             border: none;
+             font-size: 18px;
+             cursor: pointer;
+             color: #65676b;
+             margin-left: 8px;
+             padding: 0;
+             width: 20px;
+             height: 20px;
+             display: flex;
+             align-items: center;
+             justify-content: center;
+         }
+         
+         .toast-close:hover {
+             color: #e74c3c;
+         }
+         
+         @keyframes slideInRight {
+             from {
+                 transform: translateX(100%);
+                 opacity: 0;
+             }
+             to {
+                 transform: translateX(0);
+                 opacity: 1;
+             }
+         }
+         
+         .user-status {
+             padding: 4px 12px;
+             border-radius: 20px;
+             font-size: 12px;
+             font-weight: 600;
+         }
+         
+         .user-status.active {
+             background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+             color: #155724;
+             box-shadow: 0 2px 8px rgba(168, 237, 234, 0.3);
+         }
+         
+         /* New horizontal layout elements */
+         .transaction-info {
+             flex: 1;
+             min-width: 120px;
+         }
+         
+         .transaction-info .transaction-id {
+             font-size: 14px;
+             font-weight: 600;
+             color: #2c3e50;
+             font-family: 'Courier New', monospace;
+             background: rgba(102, 126, 234, 0.1);
+             padding: 6px 10px;
+             border-radius: 6px;
+             border: 1px solid rgba(102, 126, 234, 0.2);
+             text-align: center;
+         }
+         
+         .screenshot-preview {
+             min-width: 80px;
+             display: flex;
+             justify-content: center;
+         }
+         
+         .mini-screenshot {
+             width: 60px;
+             height: 40px;
+             border-radius: 6px;
+             border: 2px solid rgba(102, 126, 234, 0.2);
+             cursor: pointer;
+             transition: all 0.3s ease;
+         }
+         
+         .mini-screenshot:hover {
+             transform: scale(1.05);
+             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+         }
+         
+         .date-info {
+             min-width: 100px;
+             text-align: center;
+         }
+         
+         .date-info .date {
+             font-size: 14px;
+             font-weight: 600;
+             color: #2c3e50;
+         }
+         
+         .expanded-content {
+             display: none;
+             margin-top: 20px;
+             padding-top: 20px;
+             border-top: 1px solid rgba(102, 126, 234, 0.1);
+         }
+         
+         .user-card.expanded .expanded-content {
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+             gap: 20px;
+         }
+         
+         .transaction-details {
+             flex: 1;
+             display: grid;
+             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+             gap: 20px;
+         }
+         
+         .screenshot-section,
+         .amount-section,
+         .transaction-id-section,
+         .datetime-section {
+             background: rgba(255,255,255,0.7);
+             padding: 15px;
+             border-radius: 12px;
+             border: 1px solid rgba(102, 126, 234, 0.1);
+         }
+         
+         .screenshot-section h5,
+         .amount-section h5,
+         .transaction-id-section h5,
+         .datetime-section h5 {
+             font-size: 14px;
+             font-weight: 600;
+             color: #667eea;
+             margin-bottom: 10px;
+             display: flex;
+             align-items: center;
+             gap: 5px;
+         }
+         
+         .transaction-screenshot {
+             width: 100%;
+             max-width: 200px;
+             height: 150px;
+             object-fit: cover;
+             border-radius: 8px;
+             border: 2px solid rgba(102, 126, 234, 0.2);
+             cursor: pointer;
+             transition: all 0.3s ease;
+         }
+         
+         .transaction-screenshot:hover {
+             transform: scale(1.05);
+             box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+         }
+         
+         .amount-display {
+             font-size: 24px;
+             font-weight: 800;
+             color: #27ae60;
+             text-shadow: 0 2px 4px rgba(39, 174, 96, 0.2);
+         }
+         
+         .transaction-id {
+             font-size: 16px;
+             font-weight: 600;
+             color: #2c3e50;
+             font-family: 'Courier New', monospace;
+             background: rgba(102, 126, 234, 0.1);
+             padding: 8px 12px;
+             border-radius: 6px;
+             border: 1px solid rgba(102, 126, 234, 0.2);
+         }
+         
+         .datetime-info {
+             display: flex;
+             flex-direction: column;
+             gap: 5px;
+         }
+         
+         .datetime-info .date {
+             font-size: 16px;
+             font-weight: 600;
+             color: #2c3e50;
+         }
+         
+         .datetime-info .time {
+             font-size: 14px;
+             color: #65676b;
+         }
+         
+         .datetime-info .action {
+             font-size: 12px;
+             color: #667eea;
+             font-weight: 600;
+             background: rgba(102, 126, 234, 0.1);
+             padding: 4px 8px;
+             border-radius: 4px;
+             display: inline-block;
+             width: fit-content;
+         }
+         
+         .action-section {
+             display: flex;
+             align-items: center;
+             justify-content: center;
+             gap: 8px;
+             min-width: 160px;
+         }
+         
+         .send-btn {
+             background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+             color: white;
+             border: none;
+             padding: 10px 18px;
+             border-radius: 8px;
+             font-size: 14px;
+             font-weight: 600;
+             cursor: pointer;
+             transition: all 0.3s ease;
+             box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+             position: relative;
+             overflow: hidden;
+         }
+         
+         .send-btn::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: 0;
+             right: 0;
+             bottom: 0;
+             background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+             transform: translateX(-100%);
+             transition: transform 0.4s ease;
+         }
+         
+         .send-btn:hover::before {
+             transform: translateX(100%);
+         }
+         
+         .send-btn:hover {
+             transform: translateY(-2px);
+             box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+         }
+         
+         .send-btn span {
+             position: relative;
+             z-index: 1;
+         }
+         
+         .deduct-btn {
+             background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+             color: white;
+             border: none;
+             padding: 10px 18px;
+             border-radius: 8px;
+             font-size: 14px;
+             font-weight: 600;
+             cursor: pointer;
+             transition: all 0.3s ease;
+             box-shadow: 0 4px 15px rgba(231, 76, 60, 0.4);
+             position: relative;
+             overflow: hidden;
+             margin-right: 8px;
+         }
+         
+         .deduct-btn::before {
+             content: '';
+             position: absolute;
+             top: 0;
+             left: 0;
+             right: 0;
+             bottom: 0;
+             background: linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.2) 50%, transparent 70%);
+             transform: translateX(-100%);
+             transition: transform 0.4s ease;
+         }
+         
+         .deduct-btn:hover::before {
+             transform: translateX(100%);
+         }
+         
+         .deduct-btn:hover {
+             transform: translateY(-2px);
+             box-shadow: 0 6px 20px rgba(231, 76, 60, 0.4);
+         }
+         
+         .deduct-btn span {
+             position: relative;
+             z-index: 1;
+         }
+         
+         .deduct-btn.deducted {
+             background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+             cursor: not-allowed;
+         }
+        
+        .screenshot-preview {
+            max-width: 200px;
+            max-height: 150px;
+            border-radius: 8px;
+            border: 2px solid #e4e6ea;
+            cursor: pointer;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+        }
+        
+                 .modal-content {
+             position: absolute;
+             top: 50%;
+             left: 50%;
+             transform: translate(-50%, -50%);
+             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+             border-radius: 20px;
+             padding: 35px;
+             max-width: 500px;
+             width: 90%;
+             max-height: 80vh;
+             overflow-y: auto;
+             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+             border: 2px solid rgba(102, 126, 234, 0.1);
+         }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e4e6ea;
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2c3e50;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #65676b;
+        }
+        
+        .modal-screenshot {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+                 @media (max-width: 768px) {
+             .software-info {
+                 flex-direction: row;
+                 text-align: left;
+             }
+             
+             .software-details {
+                 text-align: left;
+             }
+             
+             .software-name {
+                 font-size: 20px;
+             }
+             
+             .software-logo {
+                 width: 50px;
+                 height: 50px;
+             }
+             
+             .admin-stats {
+                 grid-template-columns: repeat(2, 1fr);
+             }
+             
+                           .admin-content {
+                  flex-direction: column;
+              }
+              
+              .request-filters {
+                  flex-direction: row;
+                  width: 100%;
+                  flex-wrap: wrap;
+              }
+             
+             .request-details {
+                 grid-template-columns: 1fr;
+             }
+             
+                           .request-actions {
+                  flex-direction: column;
+              }
+              
+              /* Mobile responsive for user management system */
+              .user-card {
+                  flex-direction: column;
+                  gap: 15px;
+                  padding: 15px;
+              }
+              
+              .user-profile {
+                  min-width: auto;
+                  justify-content: center;
+              }
+              
+              .transaction-info,
+              .amount-info,
+              .screenshot-preview,
+              .date-info {
+                  min-width: auto;
+                  text-align: center;
+              }
+              
+              .action-section {
+                  min-width: auto;
+              }
+              
+              .send-btn {
+                  width: 100%;
+                  padding: 12px 20px;
+              }
+              
+              .expanded-content {
+                  grid-template-columns: 1fr;
+                  gap: 15px;
+              }
+              
+              /* Column headers mobile responsive */
+              .column-headers {
+                  flex-direction: column;
+                  gap: 10px;
+                  padding: 10px 20px;
+                  font-size: 12px;
+              }
+              
+              .header-profile,
+              .header-number,
+              .header-amount,
+              .header-transaction,
+              .header-screenshot,
+              .header-date,
+              .header-action {
+                  min-width: auto;
+                  text-align: center;
+              }
+              
+              .phone-info {
+                  min-width: auto;
+                  text-align: center;
+              }
+              
+              /* Search responsive styles */
+              .search-container {
+                  padding: 15px 20px 10px 20px;
+              }
+              
+              .search-box {
+                  max-width: 100%;
+              }
+              
+              .search-box input {
+                  padding: 10px 40px 10px 15px;
+                  font-size: 13px;
+              }
+              
+              .clear-search-btn {
+                  width: 25px;
+                  height: 25px;
+                  font-size: 10px;
+              }
+         }
+         
+         /* Withdraw specific styles */
+         .commission-info, .final-amount-info {
+             text-align: center;
+             padding: 8px;
+         }
+         
+         .commission-display {
+             color: #e74c3c;
+             font-weight: 700;
+             font-size: 16px;
+         }
+         
+         .final-amount-display {
+             color: #27ae60;
+             font-weight: 700;
+             font-size: 16px;
+         }
+         
+         .approve-btn, .reject-btn {
+             padding: 8px 16px;
+             border: none;
+             border-radius: 6px;
+             cursor: pointer;
+             font-weight: 600;
+             font-size: 12px;
+             transition: all 0.3s ease;
+             margin: 2px;
+         }
+         
+         .approve-btn {
+             background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+             color: white;
+             box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+         }
+         
+         .reject-btn {
+             background: linear-gradient(135deg, #dc3545 0%, #fd7e14 100%);
+             color: white;
+             box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+         }
+         
+         .approve-btn:hover, .reject-btn:hover {
+             transform: translateY(-2px);
+             box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+         }
+         
+         .status-badge {
+             padding: 6px 12px;
+             border-radius: 20px;
+             font-size: 12px;
+             font-weight: bold;
+             text-align: center;
+             min-width: 80px;
+         }
+         
+         .status-badge.status-approved {
+             background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+             color: #155724;
+             border: 1px solid #c3e6cb;
+         }
+         
+         .status-badge.status-rejected {
+             background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 100%);
+             color: #721c24;
+             border: 1px solid #f5c6cb;
+         }
+         
+         .header-commission, .header-final {
+             font-weight: 600;
+             color: #2c3e50;
+             text-align: center;
+             padding: 12px;
+             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+             border-radius: 8px;
+             margin-bottom: 10px;
+         }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+                 <!-- Software Header -->
+         <div class="software-header">
+             <div class="software-info">
+                                   <div class="software-logo">
+                      <img src="cncfblogo.png" alt="CNC FB Logo" style="width: 50px; height: 50px; object-fit: contain; border-radius: 50%;">
+                  </div>
+                 <div class="software-details">
+                     <h1 class="software-name">CNC FB SOFTWARE</h1>
+                 </div>
+             </div>
+             <div class="admin-panel-info">
+                 <h1>💸 উইথড্র এডমিন প্যানেল</h1>
+                 <p>উইথড্র রিকোয়েস্ট ম্যানেজমেন্ট</p>
+             </div>
+             <div class="header-spacer" style="flex: 1;"></div>
+         </div>
+         
+
+         
+         <!-- Logout Button -->
+         <div style="position: absolute; top: 20px; right: 30px; z-index: 1000;">
+             <button onclick="logoutAdmin()" style="
+                 background: rgba(255,255,255,0.2);
+                 border: 1px solid rgba(255,255,255,0.3);
+                 color: white;
+                 padding: 8px 16px;
+                 border-radius: 6px;
+                 cursor: pointer;
+                 font-size: 14px;
+                 font-weight: 600;
+                 transition: all 0.3s ease;
+             " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+                 🚪 লগআউট
+             </button>
+         </div>
+        
+        <!-- Stats -->
+        <div class="admin-stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalRequests">0</div>
+                <div class="stat-label">মোট রিকোয়েস্ট</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="pendingRequests">0</div>
+                <div class="stat-label">পেন্ডিং</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="approvedRequests">0</div>
+                <div class="stat-label">অ্যাপ্রুভড</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalAmount">৳0</div>
+                <div class="stat-label">মোট অ্যামাউন্ট</div>
+            </div>
+        </div>
+        
+                 <!-- Content -->
+         <div class="admin-content">
+             <!-- Filters -->
+             <div class="request-filters">
+                 <div class="section-title">
+                     📋 উইথড্র রিকোয়েস্ট
+                 </div>
+                 <button class="filter-btn active" onclick="filterRequests('all')">সব</button>
+                 <button class="filter-btn" onclick="filterRequests('pending')">পেন্ডিং</button>
+                 <button class="filter-btn" onclick="filterRequests('approved')">অ্যাপ্রুভড</button>
+                 <button class="filter-btn" onclick="filterRequests('rejected')">রিজেক্টেড</button>
+             </div>
+             
+             <!-- Requests Grid -->
+             <div class="requests-grid" id="requestsGrid">
+                 <!-- Requests will be loaded here -->
+             </div>
+         </div>
+    </div>
+    
+    <!-- Request Detail Modal -->
+    <div class="modal" id="requestModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">রিকোয়েস্ট বিবরণ</h3>
+                <button class="close-modal" onclick="closeModal()">×</button>
+            </div>
+            <div id="modalContent">
+                <!-- Modal content will be loaded here -->
+            </div>
+        </div>
+    </div>
+    
+         <script>
+         let allRequests = [];
+         let currentFilter = 'all';
+         
+         // Check admin access on page load
+         document.addEventListener('DOMContentLoaded', function() {
+             checkAdminAccess();
+         });
+         
+         // Check session when page becomes visible
+         document.addEventListener('visibilitychange', function() {
+             if (!document.hidden) {
+                 const isAuthenticated = sessionStorage.getItem('adminAuthenticated');
+                 if (!isAuthenticated) {
+                     window.close();
+                 }
+             }
+         });
+         
+         // Check admin access
+         function checkAdminAccess() {
+             const isAuthenticated = sessionStorage.getItem('adminAuthenticated');
+             
+             if (!isAuthenticated) {
+                 const password = prompt('এডমিন প্যানেলে প্রবেশ করতে পাসওয়ার্ড দিন:');
+                 
+                 if (password === 'Marufyt@260') {
+                     sessionStorage.setItem('adminAuthenticated', 'true');
+                     sessionStorage.setItem('adminLoginTime', Date.now().toString());
+                     loadRequests();
+                     startAutoRefresh();
+                 } else if (password !== null) {
+                     alert('ভুল পাসওয়ার্ড! অনুগ্রহ করে আবার চেষ্টা করুন।');
+                     window.close();
+                 } else {
+                     window.close();
+                 }
+             } else {
+                 // Check if session is not expired (8 hours)
+                 const loginTime = parseInt(sessionStorage.getItem('adminLoginTime') || '0');
+                 const currentTime = Date.now();
+                 const sessionDuration = 8 * 60 * 60 * 1000; // 8 hours in milliseconds
+                 
+                 if (currentTime - loginTime > sessionDuration) {
+                     sessionStorage.removeItem('adminAuthenticated');
+                     sessionStorage.removeItem('adminLoginTime');
+                     alert('সেশন শেষ হয়ে গেছে। অনুগ্রহ করে আবার লগইন করুন।');
+                     window.close();
+                     return;
+                 }
+                 
+                 loadRequests();
+                 startAutoRefresh();
+             }
+         }
+         
+         // Start auto-refresh for new requests
+         function startAutoRefresh() {
+             // Refresh every 10 seconds
+             setInterval(async () => {
+                 try {
+                     const response = await fetch('https://my-fb-server-2.onrender.com/admin/withdraw-requests');
+                     if (response.ok) {
+                         const newRequests = await response.json();
+                         // Sort requests by timestamp (newest first)
+                         newRequests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                         
+                         // Check if there are new requests
+                         if (newRequests.length !== allRequests.length) {
+                             allRequests = newRequests;
+                             updateStats();
+                             renderRequests();
+                             console.log('New requests detected, updated display');
+                         } else {
+                             // Check if any existing requests have changed status
+                             let hasChanges = false;
+                             for (let i = 0; i < newRequests.length; i++) {
+                                 if (newRequests[i].status !== allRequests[i]?.status) {
+                                     hasChanges = true;
+                                     break;
+                                 }
+                             }
+                             if (hasChanges) {
+                                 allRequests = newRequests;
+                                 updateStats();
+                                 renderRequests();
+                                 console.log('Request status changes detected, updated display');
+                             }
+                         }
+                     }
+                 } catch (error) {
+                     console.error('Auto-refresh error:', error);
+                 }
+             }, 10000); // 10 seconds
+         }
+        
+        // Load requests from server
+        async function loadRequests() {
+            try {
+                const response = await fetch('https://my-fb-server-2.onrender.com/admin/withdraw-requests');
+                if (response.ok) {
+                    allRequests = await response.json();
+                    console.log('Raw server requests:', allRequests);
+                    
+                    // Try to fetch user profiles for each request
+                    for (let request of allRequests) {
+                        if (request.userName) {
+                            try {
+                                const userResponse = await fetch(`https://my-fb-server-2.onrender.com/api/user/${encodeURIComponent(request.userName)}`);
+                                if (userResponse.ok) {
+                                    const userData = await userResponse.json();
+                                    request.profileImage = userData.profileImage || userData.profile || null;
+                                    request.phone = request.phone || userData.phone || userData.mobileNumber || null;
+                                }
+                            } catch (userError) {
+                                console.log('Could not fetch user data for:', request.userName, userError);
+                            }
+                        }
+                    }
+                    
+                    // Sort requests by timestamp (newest first)
+                    allRequests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    updateStats();
+                    renderRequests();
+                } else {
+                    console.error('Failed to load requests');
+                    // Load from localStorage as fallback
+                    loadFromLocalStorage();
+                }
+            } catch (error) {
+                console.error('Error loading requests:', error);
+                // Load from localStorage as fallback
+                loadFromLocalStorage();
+            }
+        }
+        
+                // Load from localStorage as fallback
+        async function loadFromLocalStorage() {
+            try {
+                console.log('Attempting to fetch requests from server...');
+                // Try to fetch from server first
+                const response = await fetch('https://my-fb-server-2.onrender.com/admin/withdraw-requests');
+                console.log('Server response status:', response.status);
+                
+                if (response.ok) {
+                    const serverRequests = await response.json();
+                    console.log('Server requests received:', serverRequests);
+                    allRequests = serverRequests.map(request => ({
+                        id: request.id,
+                        userName: request.userName,
+                        phone: request.account || request.phone || request.mobileNumber,
+                        amount: request.amount,
+                        method: request.method,
+                        commission: request.commission,
+                        finalAmount: request.finalAmount,
+                        status: request.status || 'pending',
+                        timestamp: request.timestamp,
+                        profileImage: request.profileImage || request.userProfile || null
+                    }));
+                    // Sort requests by timestamp (newest first)
+                    allRequests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    console.log('Mapped requests:', allRequests);
+                } else {
+                    console.log('Server request failed, falling back to localStorage');
+                    // Fallback to localStorage
+                    const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+                    console.log('localStorage transactions:', transactions);
+                    allRequests = transactions.filter(t => t.type === 'withdraw').map(t => ({
+                        id: t.id,
+                        userName: t.userName,
+                        phone: t.account || t.phone || t.mobileNumber,
+                        amount: t.amount,
+                        method: t.method,
+                        commission: t.commission || 0,
+                        finalAmount: t.finalAmount || t.amount,
+                        status: t.status || 'pending',
+                        timestamp: t.timestamp,
+                        transactionId: t.transactionId || '',
+                        screenshot: t.screenshot || null,
+                        profileImage: t.profileImage || t.userProfile || null
+                    }));
+                    // Sort requests by timestamp (newest first)
+                    allRequests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                    console.log('localStorage mapped requests:', allRequests);
+                }
+                
+                // Try to get user data from localStorage for missing profiles
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                for (let request of allRequests) {
+                    if (request.userName && !request.profileImage) {
+                        const user = users.find(u => u.userName === request.userName);
+                        if (user) {
+                            request.profileImage = user.profileImage || user.profile || null;
+                            request.phone = request.phone || request.account || user.phone || user.mobileNumber || null;
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                console.error('Error loading requests:', error);
+                // Fallback to localStorage
+                const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+                console.log('Error fallback - localStorage transactions:', transactions);
+                allRequests = transactions.filter(t => t.type === 'withdraw').map(t => ({
+                    id: t.id,
+                    userName: t.userName,
+                    phone: t.phone || t.account || t.mobileNumber,
+                    amount: t.amount,
+                    method: t.method,
+                    commission: t.commission || 0,
+                    finalAmount: t.finalAmount || t.amount,
+                    status: t.status || 'pending',
+                    timestamp: t.timestamp,
+                    transactionId: t.transactionId || '',
+                    screenshot: t.screenshot || null,
+                    profileImage: t.profileImage || t.userProfile || null
+                }));
+                // Sort requests by timestamp (newest first)
+                allRequests.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+                console.log('Error fallback - mapped requests:', allRequests);
+                
+                // Try to get user data from localStorage for missing profiles
+                const users = JSON.parse(localStorage.getItem('users') || '[]');
+                for (let request of allRequests) {
+                    if (request.userName && !request.profileImage) {
+                        const user = users.find(u => u.userName === request.userName);
+                        if (user) {
+                            request.profileImage = user.profileImage || user.profile || null;
+                            request.phone = request.phone || request.account || user.phone || user.mobileNumber || null;
+                        }
+                    }
+                }
+            }
+            console.log('Final allRequests:', allRequests);
+            updateStats();
+            renderRequests();
+        }
+        
+        // Update statistics
+        function updateStats() {
+            const total = allRequests.length;
+            const pending = allRequests.filter(r => r.status === 'pending').length;
+            const approved = allRequests.filter(r => r.status === 'approved').length;
+            const deducted = allRequests.filter(r => r.status === 'deducted').length;
+            const totalAmount = allRequests
+                .filter(r => r.status === 'approved')
+                .reduce((sum, r) => sum + parseFloat(r.amount), 0);
+            
+            document.getElementById('totalRequests').textContent = total;
+            document.getElementById('pendingRequests').textContent = pending;
+            document.getElementById('approvedRequests').textContent = approved;
+            document.getElementById('totalAmount').textContent = '৳' + totalAmount.toLocaleString();
+        }
+        
+        // Render requests based on filter
+        function renderRequests() {
+            const grid = document.getElementById('requestsGrid');
+            let filteredRequests = filterRequestsByStatus(currentFilter);
+            
+            // Apply search filter
+            filteredRequests = filterRequestsBySearch(filteredRequests);
+            
+            // Debug: Log the first few requests to see their structure
+            console.log('Rendering requests. First 3 requests:', filteredRequests.slice(0, 3));
+            console.log('Phone numbers in first 3 requests:', filteredRequests.slice(0, 3).map(r => ({ id: r.id, phone: r.phone, account: r.account, userName: r.userName })));
+            
+            // Always show user management system
+            grid.innerHTML = `
+                <!-- User Management System -->
+                <div class="user-management-system">
+                    <div class="system-header">
+                        <h3>👥 ইউজার ম্যানেজমেন্ট সিস্টেম</h3>
+                        <p class="system-subtitle">সকল ইউজারের তথ্য এবং লেনদেনের বিবরণ</p>
+                    </div>
+                    
+                    <!-- Search Bar -->
+                    <div class="search-container">
+                        <div class="search-box">
+                            <input type="text" id="searchInput" placeholder="🔍 নাম্বার, প্রোফাইল নাম, বা ট্রানজেকশন আইডি দিয়ে সার্চ করুন..." onkeyup="performSearch()">
+                            <button class="clear-search-btn" onclick="clearSearch()" id="clearSearchBtn" style="display: none;">❌</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Column Headers -->
+                    <div class="column-headers">
+                        <div class="header-profile">প্রোফাইল</div>
+                        <div class="header-number">নাম্বার</div>
+                        <div class="header-amount">অ্যামাউন্ট</div>
+                        <div class="header-commission">কমিশন</div>
+                        <div class="header-final">প্রাপ্ত অ্যামাউন্ট</div>
+                        <div class="header-date">তারিখ</div>
+                        <div class="header-action">অ্যাকশন</div>
+                    </div>
+                    
+                    <div class="user-list" id="userList">
+                        ${filteredRequests.length === 0 ? 
+                            '<div style="text-align: center; padding: 40px; color: #666; font-style: italic;">কোন উইথড্র রিকোয়েস্ট নেই</div>' : 
+                            filteredRequests.map(request => `
+                                <div class="user-card" onclick="toggleCardExpansion(this)">
+                                    <div class="user-profile">
+                                        <div class="profile-image">
+                                            <img src="${request.profileImage || 'https://via.placeholder.com/40x40/667eea/ffffff?text=U'}" alt="User Profile" onerror="this.src='https://via.placeholder.com/40x40/667eea/ffffff?text=U'">
+                                        </div>
+                                        <div class="profile-info">
+                                            <h4>${request.userName || 'Unknown User'}</h4>
+                                            <p>${request.method ? getPaymentMethodText(request.method) : 'N/A'}</p>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="phone-info">
+                                        <div class="phone-number">
+                                            ${request.phone || request.account || 'N/A'}
+                                            ${(request.phone || request.account) ? `<button class="copy-phone-btn" onclick="copyPhoneNumber('${request.phone || request.account}', event); event.stopPropagation();" title="নাম্বার কপি করুন">📋</button>` : ''}
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="amount-info">
+                                        <div class="amount-display">৳ ${request.amount ? request.amount.toLocaleString() : '0'}</div>
+                                    </div>
+                                    
+                                    <div class="commission-info">
+                                        <div class="commission-display">৳ ${request.commission ? request.commission.toLocaleString() : '0'}</div>
+                                    </div>
+                                    
+                                    <div class="final-amount-info">
+                                        <div class="final-amount-display">৳ ${request.finalAmount ? request.finalAmount.toLocaleString() : '0'}</div>
+                                    </div>
+                                    
+                                    <div class="date-info">
+                                        <div class="date">${new Date(request.timestamp).toLocaleDateString('bn-BD')}</div>
+                                    </div>
+                                    
+                                    <div class="action-section">
+                                        ${request.status === 'pending' ? `
+                                            <button class="approve-btn" onclick="approveRequest('${request.id}', event); event.stopPropagation();" title="অনুমোদন করুন">
+                                                <span>✅ অনুমোদন</span>
+                                            </button>
+                                            <button class="reject-btn" onclick="rejectRequest('${request.id}', event); event.stopPropagation();" title="প্রত্যাখ্যান করুন">
+                                                <span>❌ প্রত্যাখ্যান</span>
+                                            </button>
+                                        ` : `
+                                            <div class="status-badge status-${request.status}">
+                                                ${request.status === 'approved' ? '✅ অনুমোদিত' : '❌ প্রত্যাখ্যাত'}
+                                            </div>
+                                        `}
+                                    </div>
+                                    
+                                    <!-- Expanded content (hidden by default) -->
+                                    <div class="expanded-content">
+                                        <div class="amount-section">
+                                            <h5>💰 অ্যামাউন্ট</h5>
+                                            <div class="amount-display">৳ ${request.amount}</div>
+                                        </div>
+                                        
+                                        <div class="commission-section">
+                                            <h5>💰 কমিশন</h5>
+                                            <div class="commission-display">৳ ${request.commission ? request.commission.toLocaleString() : '0'}</div>
+                                        </div>
+                                        
+                                        <div class="final-amount-section">
+                                            <h5>💸 প্রাপ্ত অ্যামাউন্ট</h5>
+                                            <div class="final-amount-display">৳ ${request.finalAmount ? request.finalAmount.toLocaleString() : '0'}</div>
+                                        </div>
+                                        
+                                        <div class="full-datetime-section">
+                                            <h5>📅 তারিখ ও সময়</h5>
+                                            <div class="datetime-info">
+                                                <div class="date">${new Date(request.timestamp).toLocaleDateString('bn-BD')}</div>
+                                                <div class="time">${new Date(request.timestamp).toLocaleTimeString('bn-BD')}</div>
+                                                <div class="action">উইথড্র রিকোয়েস্ট</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            `).join('')
+                        }
+                    </div>
+                </div>
+            `;
+        }
+        
+        // Filter requests
+        function filterRequests(status) {
+            currentFilter = status;
+            
+            // Update filter buttons
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            renderRequests();
+        }
+        
+        // Filter requests by status
+        function filterRequestsByStatus(status) {
+            if (status === 'all') return allRequests;
+            return allRequests.filter(r => r.status === status);
+        }
+        
+        // Get status text
+        function getStatusText(status) {
+            const statusMap = {
+                'pending': 'পেন্ডিং',
+                'approved': 'অ্যাপ্রুভড',
+                'rejected': 'রিজেক্টেড',
+                'deducted': 'কাটা হয়েছে'
+            };
+            return statusMap[status] || status;
+        }
+        
+        // Get payment method text
+        function getPaymentMethodText(method) {
+            const methodMap = {
+                'bkash': 'বিকাশ',
+                'nagad': 'নগদ',
+                'rocket': 'রকেট',
+                'upay': 'UPay'
+            };
+            return methodMap[method] || method;
+        }
+        
+        // Get channel text
+        function getChannelText(channel) {
+            const channelMap = {
+                'cashout': 'ক্যাশ আউট',
+                'send': 'সেন্ড মানি'
+            };
+            return channelMap[channel] || channel;
+        }
+        
+        // Format date
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('bn-BD') + ' ' + date.toLocaleTimeString('bn-BD');
+        }
+        
+        // View request details
+        function viewRequest(requestId) {
+            const request = allRequests.find(r => r.id === requestId);
+            if (!request) return;
+            
+            const modal = document.getElementById('requestModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            modalContent.innerHTML = `
+                <div class="request-details">
+                    <div class="detail-item">
+                        <div class="detail-label">রিকোয়েস্ট আইডি</div>
+                        <div class="detail-value">#${request.id}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">ইউজার নাম</div>
+                        <div class="detail-value">${request.userName}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">পরিমাণ</div>
+                        <div class="detail-value">৳${parseFloat(request.amount).toLocaleString()}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">পেমেন্ট পদ্ধতি</div>
+                        <div class="detail-value">${getPaymentMethodText(request.method)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">কমিশন</div>
+                        <div class="detail-value">৳${request.commission ? request.commission.toLocaleString() : '0'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">প্রাপ্ত অ্যামাউন্ট</div>
+                        <div class="detail-value">৳${request.finalAmount ? request.finalAmount.toLocaleString() : '0'}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">তারিখ</div>
+                        <div class="detail-value">${formatDate(request.timestamp)}</div>
+                    </div>
+                    <div class="detail-item">
+                        <div class="detail-label">স্ট্যাটাস</div>
+                        <div class="detail-value">
+                            <span class="request-status status-${request.status}">
+                                ${getStatusText(request.status)}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                
+
+                
+                ${request.status === 'pending' ? `
+                <div class="request-actions" style="margin-top: 20px;">
+                    <button class="action-btn btn-approve" onclick="approveRequest(${request.id})">অ্যাপ্রুভ</button>
+                    <button class="action-btn btn-reject" onclick="rejectRequest(${request.id})">রিজেক্ট</button>
+                </div>
+                ` : ''}
+            `;
+            
+            modal.style.display = 'block';
+        }
+        
+
+        
+        // Close modal
+        function closeModal() {
+            document.getElementById('requestModal').style.display = 'none';
+        }
+        
+        // Approve request
+        async function approveRequest(requestId) {
+            const request = allRequests.find(r => r.id.toString() === requestId.toString());
+            if (!request) {
+                alert('রিকোয়েস্ট খুঁজে পাওয়া যায়নি!');
+                return;
+            }
+            
+            if (!confirm(`আপনি কি নিশ্চিত যে আপনি ${request.userName} এর ৳${request.amount} উইথড্র অনুরোধ অনুমোদন করতে চান?`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`https://my-fb-server-2.onrender.com/admin/approve-withdraw`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        requestId: requestId,
+                        status: 'approved'
+                    })
+                });
+                
+                if (response.ok) {
+                    // Update local data
+                    request.status = 'approved';
+                    
+                    // Update in localStorage
+                    const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+                    const transactionIndex = transactions.findIndex(t => t.id.toString() === requestId.toString());
+                    if (transactionIndex !== -1) {
+                        transactions[transactionIndex].status = 'approved';
+                        localStorage.setItem('transactions', JSON.stringify(transactions));
+                    }
+                    
+                    updateStats();
+                    renderRequests();
+                    closeModal();
+                    alert(`✅ ${request.userName} এর উইথড্র অনুরোধ সফলভাবে অনুমোদিত হয়েছে!`);
+                } else {
+                    alert('❌ সার্ভারে অনুমোদন পাঠাতে সমস্যা হয়েছে।');
+                }
+            } catch (error) {
+                console.error('Error approving request:', error);
+                // Update locally as fallback
+                request.status = 'approved';
+                updateLocalStorage();
+                updateStats();
+                renderRequests();
+                closeModal();
+                alert('❌ অনুমোদন করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+            }
+        }
+        
+        // Reject request
+        async function rejectRequest(requestId) {
+            const request = allRequests.find(r => r.id.toString() === requestId.toString());
+            if (!request) {
+                alert('রিকোয়েস্ট খুঁজে পাওয়া যায়নি!');
+                return;
+            }
+            
+            if (!confirm(`আপনি কি নিশ্চিত যে আপনি ${request.userName} এর ৳${request.amount} উইথড্র অনুরোধ প্রত্যাখ্যান করতে চান?`)) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`https://my-fb-server-2.onrender.com/admin/reject-withdraw`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        requestId: requestId,
+                        status: 'rejected'
+                    })
+                });
+                
+                if (response.ok) {
+                    // Update local data
+                    request.status = 'rejected';
+                    
+                    // Update in localStorage
+                    const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+                    const transactionIndex = transactions.findIndex(t => t.id.toString() === requestId.toString());
+                    if (transactionIndex !== -1) {
+                        transactions[transactionIndex].status = 'rejected';
+                        localStorage.setItem('transactions', JSON.stringify(transactions));
+                    }
+                    
+                    updateStats();
+                    renderRequests();
+                    closeModal();
+                    alert(`❌ ${request.userName} এর উইথড্র অনুরোধ প্রত্যাখ্যাত হয়েছে!`);
+                } else {
+                    alert('❌ সার্ভারে প্রত্যাখ্যান পাঠাতে সমস্যা হয়েছে।');
+                }
+            } catch (error) {
+                console.error('Error rejecting request:', error);
+                // Update locally as fallback
+                request.status = 'rejected';
+                updateLocalStorage();
+                updateStats();
+                renderRequests();
+                closeModal();
+                alert('❌ প্রত্যাখ্যান করতে সমস্যা হয়েছে। আবার চেষ্টা করুন।');
+            }
+        }
+        
+        // Update localStorage
+        function updateLocalStorage() {
+            const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+            
+            allRequests.forEach(request => {
+                const transaction = transactions.find(t => t.id.toString() === request.id.toString() && t.type === 'withdraw');
+                if (transaction) {
+                    transaction.status = request.status;
+                }
+            });
+            
+            localStorage.setItem('transactions', JSON.stringify(transactions));
+        }
+        
+                 // Logout admin
+         function logoutAdmin() {
+             if (confirm('আপনি কি লগআউট করতে চান?')) {
+                 sessionStorage.removeItem('adminAuthenticated');
+                 sessionStorage.removeItem('adminLoginTime');
+                 window.close();
+             }
+         }
+         
+                   // Close modal when clicking outside
+          window.onclick = function(event) {
+              const modal = document.getElementById('requestModal');
+              if (event.target === modal) {
+                  closeModal();
+              }
+          }
+          
+          // Note: saveDepositRequests is handled on the server side
+          // The server automatically saves when requests are updated
+          
+                  // Send money function
+        async function sendMoney(userId, event) {
+            console.log('sendMoney called with userId:', userId, 'event:', event);
+            console.log('allRequests array:', allRequests);
+            console.log('Looking for request with id:', parseInt(userId));
+            
+            if (confirm('আপনি কি এই ইউজারকে টাকা পাঠাতে চান?')) {
+                try {
+                    // Find the request to get user details and amount
+                    const request = allRequests.find(r => r.id === parseInt(userId));
+                    console.log('Found request:', request);
+                    if (!request) {
+                        alert('রিকোয়েস্ট পাওয়া যায়নি! allRequests length: ' + allRequests.length);
+                        return;
+                    }
+
+                    // Update user balance on server
+                    console.log('Sending request to update balance:', {
+                        userName: request.userName,
+                        amount: request.amount
+                    });
+                    
+                    const requestBody = {
+                        userName: request.userName,
+                        amount: request.amount
+                    };
+                    console.log('Request body:', JSON.stringify(requestBody));
+                    
+                    const response = await fetch('https://my-fb-server-2.onrender.com/admin/update-balance', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+
+                    console.log('Server response status:', response.status);
+                    console.log('Server response headers:', response.headers);
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log('Server response:', result);
+                        
+                        // Update request status to approved
+                        request.status = 'approved';
+                        updateLocalStorage();
+                        
+                        // Update request status on server
+                        const statusResponse = await fetch(`https://my-fb-server-2.onrender.com/admin/request/${request.id}/status`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ status: 'approved' })
+                        });
+                        
+                        console.log('Status update response:', statusResponse.status);
+                        
+                                                   // Update the button to show sent status
+                           const sendBtn = event.target.closest('.send-btn');
+                           if (sendBtn) {
+                               sendBtn.innerHTML = '<span>✅ হয়ে গেছে</span>';
+                               sendBtn.style.background = 'linear-gradient(135deg, #27ae60 0%, #2ecc71 100%)';
+                               sendBtn.disabled = true;
+                           }
+                        
+                        alert(`টাকা সফলভাবে পাঠানো হয়েছে! নতুন ব্যালেন্স: ৳ ${result.newBalance.toLocaleString()}`);
+                        
+                        // Refresh the requests display
+                        updateStats();
+                        renderRequests();
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Server error response:', errorText);
+                        alert('টাকা পাঠাতে সমস্যা হয়েছে। সার্ভার এরর: ' + response.status);
+                    }
+                } catch (error) {
+                    console.error('Error sending money:', error);
+                    alert('টাকা পাঠাতে সমস্যা হয়েছে। এরর: ' + error.message);
+                }
+            }
+        }
+        
+        // Deduct money function
+        async function deductMoney(userId, event) {
+            console.log('deductMoney called with userId:', userId, 'event:', event);
+            
+            const request = allRequests.find(r => r.id === parseInt(userId));
+            if (!request) {
+                alert('রিকোয়েস্ট পাওয়া যায়নি!');
+                return;
+            }
+            
+            // Ask for deduction amount
+            const deductionAmount = prompt(`কত টাকা কাটতে চান? (মোট অ্যামাউন্ট: ৳${request.amount})`);
+            
+            if (deductionAmount === null || deductionAmount === '') {
+                return; // User cancelled
+            }
+            
+            const amount = parseFloat(deductionAmount);
+            if (isNaN(amount) || amount <= 0) {
+                alert('সঠিক অ্যামাউন্ট দিন!');
+                return;
+            }
+            
+            if (amount > request.amount) {
+                alert('কাটার অ্যামাউন্ট মোট অ্যামাউন্টের চেয়ে বেশি হতে পারে না!');
+                return;
+            }
+            
+            if (confirm(`আপনি কি ${request.userName} এর থেকে ৳${amount.toLocaleString()} কাটতে চান?`)) {
+                try {
+                    // Update user balance on server (deduct amount)
+                    const requestBody = {
+                        userName: request.userName,
+                        amount: -amount // Negative amount for deduction
+                    };
+                    
+                    const response = await fetch('https://my-fb-server-2.onrender.com/admin/update-balance', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(requestBody)
+                    });
+                    
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log('Deduction successful:', result);
+                        
+                        // Update request status to deducted
+                        request.status = 'deducted';
+                        updateLocalStorage();
+                        
+                        // Update request status on server
+                        const statusResponse = await fetch(`https://my-fb-server-2.onrender.com/admin/request/${request.id}/status`, {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            body: JSON.stringify({ status: 'deducted' })
+                        });
+                        
+                        // Update the button to show deducted status
+                        const deductBtn = event.target.closest('.deduct-btn');
+                        if (deductBtn) {
+                            deductBtn.innerHTML = '<span>✅ কাটা হয়েছে</span>';
+                            deductBtn.classList.add('deducted');
+                            deductBtn.disabled = true;
+                        }
+                        
+                        alert(`টাকা সফলভাবে কাটা হয়েছে! নতুন ব্যালেন্স: ৳ ${result.newBalance.toLocaleString()}`);
+                        
+                        // Refresh the requests display
+                        updateStats();
+                        renderRequests();
+                    } else {
+                        const errorText = await response.text();
+                        console.error('Server error response:', errorText);
+                        alert('টাকা কাটতে সমস্যা হয়েছে। সার্ভার এরর: ' + response.status);
+                    }
+                } catch (error) {
+                    console.error('Error deducting money:', error);
+                    alert('টাকা কাটতে সমস্যা হয়েছে। এরর: ' + error.message);
+                }
+            }
+        }
+          
+          // Toggle card expansion
+          function toggleCardExpansion(card) {
+              card.classList.toggle('expanded');
+          }
+          
+          // Open screenshot modal
+          function openScreenshotModal(screenshotUrl) {
+              const modal = document.getElementById('requestModal');
+              const modalContent = document.getElementById('modalContent');
+              
+              modalContent.innerHTML = `
+                  <div class="modal-header">
+                      <h3 class="modal-title">স্ক্রিনশট</h3>
+                      <button class="close-modal" onclick="closeModal()">&times;</button>
+                  </div>
+                  <div style="text-align: center;">
+                      <img src="${screenshotUrl}" style="max-width: 100%; max-height: 400px; border-radius: 8px;" alt="Screenshot">
+                  </div>
+              `;
+              
+              modal.style.display = 'block';
+          }
+          
+          // Search functionality
+          let searchTerm = '';
+          
+          function performSearch() {
+              const searchInput = document.getElementById('searchInput');
+              const clearBtn = document.getElementById('clearSearchBtn');
+              searchTerm = searchInput.value.trim().toLowerCase();
+              
+              // Show/hide clear button
+              if (searchTerm.length > 0) {
+                  clearBtn.style.display = 'flex';
+              } else {
+                  clearBtn.style.display = 'none';
+              }
+              
+              // Re-render requests with search filter
+              renderRequests();
+          }
+          
+          function clearSearch() {
+              const searchInput = document.getElementById('searchInput');
+              const clearBtn = document.getElementById('clearSearchBtn');
+              
+              searchInput.value = '';
+              searchTerm = '';
+              clearBtn.style.display = 'none';
+              
+              // Re-render requests without search filter
+              renderRequests();
+          }
+          
+          // Filter requests by search term
+          function filterRequestsBySearch(requests) {
+              if (!searchTerm) return requests;
+              
+              return requests.filter(request => {
+                  const userName = (request.userName || '').toLowerCase();
+                  const phone = (request.phone || '').toLowerCase();
+                  const transactionId = (request.transactionId || '').toLowerCase();
+                  
+                  return userName.includes(searchTerm) || 
+                         phone.includes(searchTerm) || 
+                         transactionId.includes(searchTerm);
+              });
+          }
+          
+          // Copy withdraw ID function
+          async function copyWithdrawId(withdrawId, event) {
+              try {
+                  await navigator.clipboard.writeText(withdrawId);
+                  
+                  // Show success feedback
+                  const copyBtn = event.target;
+                  const originalText = copyBtn.innerHTML;
+                  copyBtn.innerHTML = '✅';
+                  copyBtn.style.color = '#27ae60';
+                  
+                  // Reset after 2 seconds
+                  setTimeout(() => {
+                      copyBtn.innerHTML = originalText;
+                      copyBtn.style.color = '#1877f2';
+                  }, 2000);
+                  
+                  // Show toast notification
+                  showToast(`উইথড্র ID ${withdrawId} কপি করা হয়েছে!`, 'success');
+              } catch (error) {
+                  console.error('Failed to copy withdraw ID:', error);
+                  showToast('উইথড্র ID কপি করতে সমস্যা হয়েছে!', 'error');
+              }
+          }
+          
+          // Copy phone number function
+          async function copyPhoneNumber(phoneNumber, event) {
+              try {
+                  await navigator.clipboard.writeText(phoneNumber);
+                  
+                  // Show success feedback
+                  const copyBtn = event.target;
+                  const originalText = copyBtn.innerHTML;
+                  copyBtn.innerHTML = '✅';
+                  copyBtn.style.color = '#27ae60';
+                  
+                  // Reset after 2 seconds
+                  setTimeout(() => {
+                      copyBtn.innerHTML = originalText;
+                      copyBtn.style.color = '#1877f2';
+                  }, 2000);
+                  
+                  // Show toast notification
+                  showToast(`নাম্বার ${phoneNumber} কপি করা হয়েছে!`, 'success');
+              } catch (error) {
+                  console.error('Failed to copy phone number:', error);
+                  showToast('নাম্বার কপি করতে সমস্যা হয়েছে!', 'error');
+              }
+          }
+          
+          // Toast notification function
+          function showToast(message, type = 'info') {
+              // Remove existing toast if any
+              const existingToast = document.querySelector('.toast-notification');
+              if (existingToast) {
+                  existingToast.remove();
+              }
+              
+              const toast = document.createElement('div');
+              toast.className = `toast-notification toast-${type}`;
+              toast.innerHTML = `
+                  <div class="toast-content">
+                      <span class="toast-message">${message}</span>
+                      <button class="toast-close" onclick="this.parentElement.parentElement.remove()">×</button>
+                  </div>
+              `;
+              
+              document.body.appendChild(toast);
+              
+              // Auto remove after 3 seconds
+              setTimeout(() => {
+                  if (toast.parentElement) {
+                      toast.remove();
+                  }
+              }, 3000);
+          }
+    </script>
+</body>
+</html> 
