@@ -45,8 +45,8 @@
     "name": "vgcn",
     "profileImage": "",
     "background": "",
-    "balance": 250,
-    "updated": 1754677413958
+    "balance": 30,
+    "updated": 1754937247202
   },
   {
     "name": "Test Seller",
@@ -64,8 +64,9 @@
   },
   {
     "name": "md maruf yt",
-    "profileImage": "https://my-fb-server-2.onrender.com/uploads/1754764599532-7.jpg",
-    "background": "https://my-fb-server-2.onrender.com/uploads/1754764602165-WhatsApp2025-07-11225059-_d00b6c7b.jpg",
-    "updated": 1754764602169
+    "profileImage": "https://my-fb-server-2.onrender.com/uploads/1754933585861-CNCFBSoftwareLogo.png",
+    "background": "https://my-fb-server-2.onrender.com/uploads/1754853949764-WhatsApp2025-07-11225059-_d00b6c7b.jpg",
+    "updated": 1754935381108,
+    "balance": 0
   }
 ]
